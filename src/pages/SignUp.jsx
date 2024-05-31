@@ -22,6 +22,7 @@ const SignUp = () => {
     e.preventDefault();
     setLoading(true);
     const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/sign-up`, {
+      // const res = await fetch(`/api/auth/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,6 +60,7 @@ const SignUp = () => {
             placeholder="Username"
             onChange={handleChange}
             value={formData.username}
+            autoComplete="off"
           />
           <input
             type="email"
@@ -68,6 +70,7 @@ const SignUp = () => {
             placeholder="Email"
             onChange={handleChange}
             value={formData.email}
+            autoComplete="off"
           />
           <input
             type="password"
@@ -77,6 +80,7 @@ const SignUp = () => {
             placeholder="Password"
             onChange={handleChange}
             value={formData.password}
+            autoComplete="off"
           />
           <button
             disabled={loading}
