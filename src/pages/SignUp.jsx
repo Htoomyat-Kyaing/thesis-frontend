@@ -21,16 +21,13 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(
-      "https://thesis-backend-m13g.onrender.com/auth/sign-up",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/sign-up`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
     try {
       const data = await res.json();
       if (data.success === false) {
