@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   signOutStart,
   signOutSuccess,
@@ -8,7 +8,7 @@ import {
 } from "../redux/user/userSlice";
 
 const Profile = () => {
-  const { currentUser, loading } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -48,7 +48,7 @@ const Profile = () => {
       <div className="flex flex-col items-center justify-center max-w-5xl gap-4 mx-auto">
         <h2 className="text-xl font-bold">Profile</h2>
 
-        {/* <span className="text-center text-red-600">{error && error}</span> */}
+        <span className="text-center text-red-600">{error && error}</span>
 
         <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-4">
           <div className="flex flex-wrap items-center justify-between">
@@ -104,13 +104,6 @@ const Profile = () => {
             {loading ? "Loading..." : "Log out the account"}
           </button>
         </form>
-
-        <span className="text-center">
-          Don&apos;t have an account?{" "}
-          <Link className="text-sky-700 hover:underline" to={"/sign-up"}>
-            Sign Up
-          </Link>
-        </span>
       </div>
     </main>
   ) : (

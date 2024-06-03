@@ -32,6 +32,8 @@ const SignIn = () => {
       headers: {
         "Content-Type": "application/json",
       },
+      // to make it visible in "cookie" tab in browser
+      credentials: "include",
       body: JSON.stringify(formData),
     });
     try {
@@ -55,15 +57,6 @@ const SignIn = () => {
         <span className="text-center text-red-600">{error && error}</span>
 
         <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-4">
-          {/* <input
-            type="text"
-            name="username"
-            required
-            className="p-2 border-2 rounded-lg"
-            placeholder="Username"
-            onChange={handleChange}
-            value={formData.username}
-          /> */}
           <input
             type="email"
             required
