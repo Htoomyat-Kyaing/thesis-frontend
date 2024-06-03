@@ -2,11 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({
-    username: "hmk",
-    email: "hmk@gmail.com",
-    password: "1234",
-  });
+  const [formData, setFormData] = useState({});
   const [error, setError] = useState();
   const [loading, setLoading] = useState();
   const navigate = useNavigate();
@@ -37,7 +33,7 @@ const SignUp = () => {
         return;
       }
       setLoading(false);
-      navigate("/profile");
+      navigate("/sign-in");
     } catch (error) {
       setError(error.message);
       setLoading(false);

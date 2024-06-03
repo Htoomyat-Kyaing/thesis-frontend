@@ -1,6 +1,8 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <header className="p-3 select-none bg-slate-200">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
@@ -17,15 +19,18 @@ const Header = () => {
         </form>
 
         <ul className="flex flex-wrap gap-4">
-          <li className="hover:underline">
-            <Link to={"/profile"}>Profile</Link>
-          </li>
-          <li className="hover:underline">
-            <Link to={"/sign-in"}>Sign In</Link>
-          </li>
-          <li className="hover:underline">
+          {currentUser ? (
+            <li className="hover:underline">
+              <Link to={"/profile"}>Profile</Link>
+            </li>
+          ) : (
+            <li className="hover:underline">
+              <Link to={"/sign-in"}>Sign In</Link>
+            </li>
+          )}
+          {/* <li className="hover:underline">
             <Link to={"/sign-up"}>Sign Up</Link>
-          </li>
+          </li> */}
         </ul>
       </div>
     </header>

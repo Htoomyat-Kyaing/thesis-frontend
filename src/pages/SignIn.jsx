@@ -9,8 +9,8 @@ import {
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
-    email: "hmk@gmail.com",
-    password: "1234",
+    email: "testUser1@gmail.com",
+    password: "HELLOtesting123",
   });
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
