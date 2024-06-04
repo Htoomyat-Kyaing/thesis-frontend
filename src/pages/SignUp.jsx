@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    username: "testUser1",
+    email: "testUser1@gmail.com",
+    password: "HELLOtesting123",
+  });
   const [error, setError] = useState();
   const [loading, setLoading] = useState();
   const navigate = useNavigate();

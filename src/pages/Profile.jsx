@@ -22,9 +22,33 @@ const Profile = () => {
       [e.target.name]: e.target.value,
     });
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Update");
+    console.log(currentUser._id);
+    // console.log();
+    console.log(getCookie("access_token"));
+    const res = await fetch(
+      // `${import.meta.env.VITE_BASE_URL}/user/update/${currentUser._id}`,
+      `/api/user/update/${currentUser._id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+    try {
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      console.log("Successful");
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleSignout = async () => {
     dispatch(signOutStart());
@@ -56,23 +80,23 @@ const Profile = () => {
             <input
               type="text"
               name="username"
-              required
+              // required
               className="p-2 border-2 rounded-lg"
               placeholder="Username"
               onChange={handleChange}
-              value={formData.username}
+              defaultValue={formData.username}
             />
           </div>
           <div className="flex items-center justify-between">
             <label htmlFor="email">Email</label>
             <input
               type="email"
-              required
+              // required
               name="email"
               className="p-2 border-2 rounded-lg"
               placeholder="Email"
               onChange={handleChange}
-              value={formData.email}
+              defaultValue={formData.email}
               autoComplete="off"
             />
           </div>
@@ -80,12 +104,12 @@ const Profile = () => {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              required
+              // required
               name="password"
               className="p-2 border-2 rounded-lg"
               placeholder="Password"
               onChange={handleChange}
-              value={formData.password}
+              defaultValue={formData.password}
               autoComplete="off"
             />
           </div>
@@ -112,5 +136,24 @@ const Profile = () => {
     </div>
   );
 };
+
+function getCookie(name) {
+  var dc = document.cookie;
+  var prefix = name + "=";
+  var begin = dc.indexOf("; " + prefix);
+  if (begin == -1) {
+    begin = dc.indexOf(prefix);
+    if (begin != 0) return null;
+  } else {
+    begin += 2;
+    var end = document.cookie.indexOf(";", begin);
+    if (end == -1) {
+      end = dc.length;
+    }
+  }
+  // because unescape has been deprecated, replaced with decodeURI
+  //return unescape(dc.substring(begin + prefix.length, end));
+  return decodeURI(dc.substring(begin + prefix.length, end));
+}
 
 export default Profile;

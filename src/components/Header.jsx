@@ -21,7 +21,7 @@ const Header = () => {
         <ul className="flex flex-wrap gap-4">
           {currentUser ? (
             <li className="hover:underline">
-              <Link to={"/profile"}>Profile</Link>
+              <Link to={`/profile`}>Profile</Link>
             </li>
           ) : (
             <li className="hover:underline">
