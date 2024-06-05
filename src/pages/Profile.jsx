@@ -5,11 +5,16 @@ import {
   signOutStart,
   signOutSuccess,
   signOutFail,
+  updateStart,
+  updateSuccess,
+  updateFail,
 } from "../redux/user/userSlice";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
+  const [success, setSuccess] = useState();
   const dispatch = useDispatch();
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: currentUser?.username,
@@ -25,12 +30,13 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(currentUser._id);
+    // console.log(currentUser._id);
     // console.log();
     console.log(getCookie("access_token"));
+    dispatch(updateStart());
     const res = await fetch(
-      // `${import.meta.env.VITE_BASE_URL}/user/update/${currentUser._id}`,
-      `/api/user/update/${currentUser._id}`,
+      `${import.meta.env.VITE_BASE_URL}/user/update/${currentUser._id}`,
+      // `/api/user/update/${currentUser._id}`,
       {
         method: "POST",
         headers: {
@@ -42,12 +48,16 @@ const Profile = () => {
     try {
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
+        dispatch(updateFail(data.message));
+        setSuccess(null);
         return;
       }
-      console.log("Successful");
+      console.log(data);
+      dispatch(updateSuccess(data));
+      setSuccess("User updated successfully");
     } catch (error) {
-      console.log(error);
+      dispatch(updateFail(error.message));
+      setSuccess(null);
     }
   };
   const handleSignout = async () => {
@@ -61,6 +71,7 @@ const Profile = () => {
         return;
       }
       dispatch(signOutSuccess());
+
       navigate("/");
     } catch (error) {
       dispatch(signOutFail(error.message));
@@ -73,6 +84,9 @@ const Profile = () => {
         <h2 className="text-xl font-bold">Profile</h2>
 
         <span className="text-center text-red-600">{error && error}</span>
+        <span className="text-center text-emerald-600">
+          {success && success}
+        </span>
 
         <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-4">
           <div className="flex flex-wrap items-center justify-between">
@@ -137,6 +151,7 @@ const Profile = () => {
   );
 };
 
+// eslint-disable-next-line no-unused-vars
 function getCookie(name) {
   var dc = document.cookie;
   var prefix = name + "=";
