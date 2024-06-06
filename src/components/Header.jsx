@@ -19,9 +19,15 @@ const Header = () => {
         </form>
 
         <ul className="flex flex-wrap gap-4">
-          {currentUser ? (
+          {currentUser?.avatar ? (
             <li className="hover:underline">
-              <Link to={`/profile`}>Profile</Link>
+              <Link to={`/profile`}>
+                <img
+                  className="w-8 rounded-full hover:border-2 hover:border-slate-900"
+                  src={`${currentUser.avatar}`}
+                  alt="default_avatar.jpg"
+                />
+              </Link>
             </li>
           ) : (
             <li className="hover:underline">

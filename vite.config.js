@@ -8,7 +8,7 @@ export default defineConfig({
     port: 3000,
     proxy: {
       "/api": {
-        // target: "https://thesis-backend-m13g.onrender.com/",
+        // target: "https://thesis-backend-m13g.onrender.com",
         target: "http://localhost:5173/",
         changeOrigin: true,
         secure: true,

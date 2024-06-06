@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   signOutStart,
@@ -9,9 +9,20 @@ import {
   updateSuccess,
   updateFail,
 } from "../redux/user/userSlice";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase/app.js";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector((state) => state.user);
+  const [imageUploadError, setImageUploadError] = useState();
+  const [imageUploadProgress, setImageUploadProgress] = useState(undefined);
+  const [image, setImage] = useState();
+  const fileRef = useRef();
   const [success, setSuccess] = useState();
   const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
@@ -20,6 +31,7 @@ const Profile = () => {
     username: currentUser?.username,
     email: currentUser?.email,
     password: currentUser?.password,
+    avatar: currentUser?.avatar,
   });
   const handleChange = (e) => {
     setFormData({
@@ -35,8 +47,8 @@ const Profile = () => {
     console.log(getCookie("access_token"));
     dispatch(updateStart());
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/user/update/${currentUser._id}`,
-      // `/api/user/update/${currentUser._id}`,
+      // `${import.meta.env.VITE_BASE_URL}/user/update/${currentUser._id}`,
+      `/api/user/update/${currentUser._id}`,
       {
         method: "POST",
         headers: {
@@ -54,6 +66,7 @@ const Profile = () => {
       }
       console.log(data);
       dispatch(updateSuccess(data));
+      setImageUploadProgress(undefined);
       setSuccess("User updated successfully");
     } catch (error) {
       dispatch(updateFail(error.message));
@@ -62,8 +75,8 @@ const Profile = () => {
   };
   const handleSignout = async () => {
     dispatch(signOutStart());
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/sign-out`);
-    // const res = await fetch(`/api/auth/sign-out`);
+    // const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/sign-out`);
+    const res = await fetch(`/api/auth/sign-out`);
     try {
       const data = await res.json();
       if (data.success === false) {
@@ -77,6 +90,39 @@ const Profile = () => {
       dispatch(signOutFail(error.message));
     }
   };
+  const handleImageUpload = () => {
+    console.log("Image Upload");
+    const storage = getStorage(app);
+    const imageName = new Date().getTime() + image.name;
+    const storageRef = ref(storage, imageName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Uploading : " + Math.round(progress) + " %");
+        setImageUploadProgress(Math.round(progress));
+      },
+      (error) => {
+        console.log(error);
+        setImageUploadError("Must be an image less than 2MB");
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log(downloadURL);
+          setFormData({ ...formData, avatar: downloadURL });
+        });
+      }
+    );
+  };
+
+  useEffect(() => {
+    if (image) {
+      handleImageUpload();
+    }
+  }, [image]);
 
   return currentUser ? (
     <main className="p-3">
@@ -87,8 +133,43 @@ const Profile = () => {
         <span className="text-center text-emerald-600">
           {success && success}
         </span>
+        {imageUploadError ? (
+          <span className="text-center text-red-600">{imageUploadError}</span>
+        ) : imageUploadProgress > 0 && imageUploadProgress < 100 ? (
+          <span className="text-center text-emerald-600">
+            Uploading : {imageUploadProgress} %
+          </span>
+        ) : imageUploadProgress === 100 ? (
+          <span className="text-center text-emerald-600">
+            Image uploaded successfully
+          </span>
+        ) : (
+          ""
+        )}
 
         <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-4">
+          <div className="flex flex-wrap items-center justify-between">
+            <label htmlFor="avatar">Profile Picture</label>
+            <input
+              className="sr-only"
+              type="file"
+              ref={fileRef}
+              accept="image/"
+              onChange={(e) => {
+                setImage(e.target.files[0]);
+              }}
+            />
+            <img
+              className="w-20 h-full"
+              src={formData.avatar || currentUser.avatar}
+              alt="user_avatar.jpg"
+              name="avatar"
+              onClick={() => {
+                fileRef.current.click();
+              }}
+            />
+          </div>
+
           <div className="flex flex-wrap items-center justify-between">
             <label htmlFor="username">Username</label>
             <input

@@ -21,8 +21,8 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/sign-up`, {
-      // const res = await fetch(`/api/auth/sign-up`, {
+    // const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/sign-up`, {
+    const res = await fetch(`/api/auth/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
