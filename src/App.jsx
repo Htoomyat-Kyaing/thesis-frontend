@@ -4,6 +4,9 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Header from "./components/Header";
 import Profile from "./pages/Profile";
+import PrivateRoute from "./pages/PrivateRoute";
+import ListItem from "./pages/ListItem";
+import SellList from "./pages/SellList";
 
 export default function App() {
   return (
@@ -14,6 +17,10 @@ export default function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/list-item" element={<ListItem />} />
+          <Route path="/sell-list" element={<SellList />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

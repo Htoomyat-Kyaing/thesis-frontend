@@ -18,7 +18,10 @@ const Header = () => {
           />
         </form>
 
-        <ul className="flex flex-wrap gap-4">
+        <ul className="flex flex-wrap items-center gap-4">
+          <li className="hover:underline">
+            <Link to={"/list-item"}>List Item</Link>
+          </li>
           {currentUser?.avatar ? (
             <li className="hover:underline">
               <Link to={`/profile`}>
@@ -34,9 +37,6 @@ const Header = () => {
               <Link to={"/sign-in"}>Sign In</Link>
             </li>
           )}
-          {/* <li className="hover:underline">
-            <Link to={"/sign-up"}>Sign Up</Link>
-          </li> */}
         </ul>
       </div>
     </header>
