@@ -7,6 +7,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase/app.js";
+import { useNavigate } from "react-router-dom";
 
 const ListItem = () => {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,7 @@ const ListItem = () => {
   const fileRef = useRef();
   const { currentUser } = useSelector((state) => state.user);
   const [formData, setFormData] = useState();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     if (e.target.name === "sellPrice") {
       setFormData({
@@ -49,19 +51,13 @@ const ListItem = () => {
     try {
       const data = await res.json();
       if (data.success === false) {
-        // dispatch(updateFail(data.message));
-        // setSuccess(null);
         console.log("server error");
         return;
       }
       console.log(data);
       setLoading(false);
-      // dispatch(updateSuccess(data));
-      // setImageUploadProgress(undefined);
-      // setSuccess("User updated successfully");
+      navigate("/sell-list");
     } catch (error) {
-      // dispatch(updateFail(error.message));
-      // setSuccess(null);
       console.log(error.message);
       setLoading(false);
     }
@@ -227,13 +223,6 @@ const ListItem = () => {
           >
             {loading ? "Loading..." : "List the item"}
           </button>
-          {/* <button
-            disabled={loading}
-            className="p-2 font-semibold uppercase rounded-lg bg-sky-700 text-slate-100 hover:bg-sky-600 disabled:bg-gray-700"
-            // onClick={handleSignout}
-          >
-            {loading ? "Loading..." : "Log out the account"}
-          </button> */}
         </form>
       </div>
     </main>

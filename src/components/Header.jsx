@@ -20,8 +20,12 @@ const Header = () => {
 
         <ul className="flex flex-wrap items-center gap-4">
           <li className="hover:underline">
+            <Link to={"/sell-list"}>Sell List</Link>
+          </li>
+          <li className="hover:underline">
             <Link to={"/list-item"}>List Item</Link>
           </li>
+
           {currentUser?.avatar ? (
             <li className="hover:underline">
               <Link to={`/profile`}>
