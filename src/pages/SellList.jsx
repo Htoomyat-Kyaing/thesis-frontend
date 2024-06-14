@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const SellList = () => {
   const [myItems, setMyItems] = useState([]);
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   const fetchItems = async () => {
     const res = await fetch(`/api/user/items/${currentUser._id}`);
@@ -41,7 +43,7 @@ const SellList = () => {
             myItems.length > 0 &&
             myItems.map((item) => (
               <div
-                className="flex flex-col justify-center max-w-sm p-2 border-2 border-black rounded-lg w-fit"
+                className="flex flex-col items-center justify-center max-w-sm p-2 border-2 border-black rounded-lg w-fit"
                 key={item._id}
               >
                 <img
@@ -56,7 +58,7 @@ const SellList = () => {
                 <div className="flex justify-between w-full">
                   <p
                     onClick={() => {
-                      console.log("handleEdit");
+                      navigate(`/edit-item/${item._id}`);
                     }}
                     className="text-emerald-600 hover:underline hover:cursor-pointer"
                   >

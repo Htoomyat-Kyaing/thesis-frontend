@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./pages/PrivateRoute";
 import ListItem from "./pages/ListItem";
 import SellList from "./pages/SellList";
+import EditItem from "./pages/EditItem";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route element={<PrivateRoute />}>
           <Route path="/list-item" element={<ListItem />} />
           <Route path="/sell-list" element={<SellList />} />
+          <Route path="/edit-item/:itemId" element={<EditItem />} />
         </Route>
       </Routes>
     </BrowserRouter>
