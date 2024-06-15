@@ -190,7 +190,7 @@ const ListItem = () => {
             />
           </div>
 
-          {/* <div className="flex flex-wrap items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between">
             <label htmlFor="category">Category</label>
             <input
               type="text"
@@ -198,10 +198,9 @@ const ListItem = () => {
               // required
               className="p-2 border-2 rounded-lg"
               placeholder="Category"
-              // onChange={handleChange}
-              // defaultValue={formData.username}
+              onChange={handleChange}
             />
-          </div> */}
+          </div>
 
           {/* <div className="flex flex-wrap items-center justify-between">
             <label htmlFor="description">Description</label>

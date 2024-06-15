@@ -8,6 +8,7 @@ import PrivateRoute from "./pages/PrivateRoute";
 import ListItem from "./pages/ListItem";
 import SellList from "./pages/SellList";
 import EditItem from "./pages/EditItem";
+import ItemPage from "./pages/ItemPage";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/item/:itemId" element={<ItemPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/list-item" element={<ListItem />} />
           <Route path="/sell-list" element={<SellList />} />

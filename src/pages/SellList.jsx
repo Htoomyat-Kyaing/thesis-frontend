@@ -38,7 +38,7 @@ const SellList = () => {
     <main className="p-3">
       <div className="flex flex-col items-center justify-center max-w-5xl gap-4 mx-auto">
         <h2 className="text-xl font-bold">Your Items On The Market</h2>
-        <div className="flex flex-wrap justify-center w-full gap-6">
+        <div className="flex flex-wrap justify-center w-full gap-6 hover:cursor-pointer">
           {myItems &&
             myItems.length > 0 &&
             myItems.map((item) => (
@@ -50,6 +50,9 @@ const SellList = () => {
                   className="object-contain w-40 h-32"
                   src={item.imageUrl}
                   alt=""
+                  onClick={() => {
+                    navigate(`/item/${item._id}`);
+                  }}
                 />
                 <p>Name : {item.name}</p>
                 <p>Price : {item.sellPrice} Kyats</p>
