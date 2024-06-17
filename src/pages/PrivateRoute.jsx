@@ -7,7 +7,7 @@ const PrivateRoute = () => {
     <Outlet />
   ) : (
     <div className="flex items-center justify-center max-w-5xl mx-auto ">
-      You need to sign in to see your profile
+      You need to sign in to see this page
     </div>
   );
 };
