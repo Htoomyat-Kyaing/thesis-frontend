@@ -13,7 +13,6 @@ const ItemPage = () => {
       const res = await fetch(`/api/item/${params.itemId}`);
       const data = await res.json();
       setFormData(data);
-      // setImage(formData.imageUrl);
     } catch (error) {
       console.log(error.message);
     }
@@ -22,17 +21,14 @@ const ItemPage = () => {
   const handleBuy = async (sellerId) => {
     const res = await fetch(`/api/user/${sellerId}`);
     const data = await res.json();
-    console.log(data.email);
     setSeller(data);
   };
 
   useEffect(() => {
     fetchItem();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   console.log(formData);
-  // }, [formData]);
   return (
     <main className="flex flex-col items-center justify-center gap-4 p-4">
       <img className="object-contain h-60" src={formData?.imageUrl} alt="" />
@@ -57,11 +53,14 @@ const ItemPage = () => {
         <div className="flex justify-center w-full gap-8 text-xl font-semibold">
           <p className="text-orange-600">
             Original Price :{" "}
-            {formData?.originalPrice ? formData.originalPrice : "UNKNOWN"}
+            {formData?.originalPrice
+              ? formData.originalPrice + " Kyats"
+              : "UNKNOWN"}
           </p>
-          <p className="text-lime-600">Sell Price : {formData?.sellPrice}</p>
+          <p className="text-lime-600">
+            Sell Price : {formData?.sellPrice} Kyats
+          </p>
         </div>
-
         {currentUser ? (
           currentUser?._id !== formData?.userRef && (
             <>

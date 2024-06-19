@@ -20,50 +20,51 @@ const SellList = () => {
   const handleDelete = async (id) => {
     try {
       await fetch(`/api/item/delete/${id}`, { method: "DELETE" });
-      // console.log(id);
     } catch (error) {
       console.log(error.message);
     }
     fetchItems();
-    console.log("items refetched");
   };
-  useEffect(() => {
-    fetchItems();
-  }, []);
 
   useEffect(() => {
-    console.log(myItems);
-  }, [myItems]);
+    fetchItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <main className="p-3">
       <div className="flex flex-col items-center justify-center max-w-5xl gap-4 mx-auto">
         <h2 className="text-xl font-bold">Your Items On The Market</h2>
-        <div className="flex flex-wrap justify-center w-full gap-6 hover:cursor-pointer">
+        <div className="flex flex-wrap items-center justify-center flex-grow w-full max-w-5xl gap-3 p-3 select-none">
           {myItems &&
             myItems.length > 0 &&
             myItems.map((item) => (
               <div
-                className="flex flex-col items-center justify-center max-w-sm p-2 border-2 border-black rounded-lg w-fit"
+                className="flex flex-col justify-center w-48 gap-4 p-2 overflow-hidden transition-all border-2 border-black rounded-lg group/item hover:scale-105 h-fit"
                 key={item._id}
               >
                 <img
                   className="object-contain w-40 h-32"
                   src={item.imageUrl}
                   alt=""
-                  onClick={() => {
-                    navigate(`/item/${item._id}`);
-                  }}
                 />
-                <p>Name : {item.name}</p>
+                <p className="truncate">Name : {item.name}</p>
                 <p>Price : {item.sellPrice} Kyats</p>
                 <p>Category : {item.category}</p>
-
                 <div className="flex justify-between w-full">
+                  <p
+                    onClick={() => {
+                      navigate(`/item/${item._id}`);
+                    }}
+                    className="text-amber-600 hover:underline "
+                  >
+                    View
+                  </p>
                   <p
                     onClick={() => {
                       navigate(`/edit-item/${item._id}`);
                     }}
-                    className="text-emerald-600 hover:underline hover:cursor-pointer"
+                    className="text-emerald-600 hover:underline "
                   >
                     Edit
                   </p>
@@ -71,7 +72,7 @@ const SellList = () => {
                     onClick={() => {
                       handleDelete(item._id);
                     }}
-                    className="text-red-600 hover:underline hover:cursor-pointer"
+                    className="text-red-600 hover:underline "
                   >
                     Delete
                   </p>
