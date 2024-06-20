@@ -196,7 +196,7 @@ const EditItem = () => {
                 >
                   Edit
                 </button>
-                {fileRef?.current.value ? (
+                {fileRef?.current?.value ? (
                   <button
                     className="text-red-600 hover:underline"
                     onClick={(e) => {

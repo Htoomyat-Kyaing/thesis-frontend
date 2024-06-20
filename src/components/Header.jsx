@@ -7,7 +7,7 @@ const Header = () => {
     <header className="p-3 bg-red-300 select-none">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
         <Link reloadDocument to={"/"}>
-          <h1 className="text-xl font-bold hover:underline">Logo</h1>
+          <h1 className="text-xl font-bold hover:underline">thesis-project</h1>
         </Link>
 
         <ul className="flex flex-wrap items-center gap-4">
@@ -19,10 +19,10 @@ const Header = () => {
           </li>
 
           {currentUser?.avatar ? (
-            <li className="hover:underline">
+            <li className="flex items-center justify-center w-10 h-10 rounded-full hover:underline">
               <Link to={`/profile`}>
                 <img
-                  className="w-8 rounded-full hover:border-2 hover:border-slate-900"
+                  className="object-cover w-10 h-10 border-2 border-red-300 rounded-full hover:border-emerald-300"
                   src={`${currentUser.avatar}`}
                   alt="default_avatar.jpg"
                 />

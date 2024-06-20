@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   signOutStart,
   signOutSuccess,
@@ -13,6 +13,7 @@ import {
   getDownloadURL,
   getStorage,
   ref,
+  deleteObject,
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase/app.js";
@@ -22,15 +23,16 @@ const Profile = () => {
   const [imageUploadError, setImageUploadError] = useState();
   const [imageUploadProgress, setImageUploadProgress] = useState(undefined);
   const [image, setImage] = useState();
+  const [imageName, setImageName] = useState();
   const fileRef = useRef();
   const [success, setSuccess] = useState();
   const dispatch = useDispatch();
-  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     username: currentUser?.username,
     email: currentUser?.email,
-    password: currentUser?.password,
+    password: currentUser?.password, // this is undefined, server response does not contain password
     avatar: currentUser?.avatar,
   });
   const handleChange = (e) => {
@@ -42,9 +44,6 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(currentUser._id);
-    // console.log();
-    console.log(getCookie("access_token"));
     dispatch(updateStart());
     const res = await fetch(
       // `${import.meta.env.VITE_BASE_URL}/user/update/${currentUser._id}`,
@@ -68,6 +67,7 @@ const Profile = () => {
       dispatch(updateSuccess(data));
       setImageUploadProgress(undefined);
       setSuccess("User updated successfully");
+      fileRef.current.value = "";
     } catch (error) {
       dispatch(updateFail(error.message));
       setSuccess(null);
@@ -94,6 +94,7 @@ const Profile = () => {
     console.log("Image Upload");
     const storage = getStorage(app);
     const imageName = new Date().getTime() + image.name;
+    setImageName(imageName);
     const storageRef = ref(storage, imageName);
     const uploadTask = uploadBytesResumable(storageRef, image);
 
@@ -117,6 +118,32 @@ const Profile = () => {
       }
     );
   };
+
+  const handleImageDelete = () => {
+    const storage = getStorage(app);
+    const imageRef = ref(storage, imageName);
+    deleteObject(imageRef)
+      .then(async () => {
+        console.log(imageRef + " has been deleted");
+        setImage(undefined);
+        setImageName(undefined);
+        setImageUploadProgress(undefined);
+        setFormData({ ...formData, avatar: currentUser?.avatar });
+        // setLoading(false);
+        // try {
+        //   const res = await fetch(`/api/item/${params.itemId}`);
+        //   const data = await res.json();
+        //   setFormData(data);
+        // } catch (error) {
+        //   console.log(error.message);
+        // }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {}, [location.key]);
 
   useEffect(() => {
     if (image) {
@@ -148,8 +175,11 @@ const Profile = () => {
           ""
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col w-1/2 gap-4">
-          <div className="flex flex-wrap items-center justify-between">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col items-center w-full max-w-sm gap-4 sm:max-w-md"
+        >
+          <div className="flex flex-wrap items-center justify-between w-full">
             <label htmlFor="avatar">Profile Picture</label>
             <input
               className="sr-only"
@@ -160,18 +190,54 @@ const Profile = () => {
                 setImage(e.target.files[0]);
               }}
             />
-            <img
-              className="w-20 h-full"
-              src={formData.avatar || currentUser.avatar}
-              alt="user_avatar.jpg"
-              name="avatar"
-              onClick={() => {
-                fileRef.current.click();
-              }}
-            />
+            {formData?.avatar ? (
+              <div className="flex gap-4">
+                <img
+                  className="w-20 h-full"
+                  src={formData?.avatar}
+                  alt="item_picture.jpg"
+                  name="item_picture"
+                />
+                <button
+                  className="text-green-600 hover:underline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    fileRef?.current.click();
+                    setSuccess(null);
+                  }}
+                >
+                  Edit
+                </button>
+
+                {fileRef?.current?.value ? (
+                  <button
+                    className="text-red-600 hover:underline"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleImageDelete();
+                      setSuccess(null);
+                      fileRef.current.value = ""; // NEED TO RESET FILEREF VALUE TO REUPLOAD SAME PICTURE
+                    }}
+                  >
+                    Cancel
+                  </button>
+                ) : (
+                  ""
+                )}
+              </div>
+            ) : (
+              <a
+                className="hover:underline"
+                onClick={() => {
+                  fileRef?.current.click();
+                }}
+              >
+                Upload Image
+              </a>
+            )}
           </div>
 
-          <div className="flex flex-wrap items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between w-full">
             <label htmlFor="username">Username</label>
             <input
               type="text"
@@ -183,7 +249,7 @@ const Profile = () => {
               defaultValue={formData.username}
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between w-full">
             <label htmlFor="email">Email</label>
             <input
               type="email"
@@ -196,7 +262,7 @@ const Profile = () => {
               autoComplete="off"
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between w-full">
             <label htmlFor="password">Password</label>
             <input
               type="password"
@@ -205,20 +271,20 @@ const Profile = () => {
               className="p-2 border-2 rounded-lg"
               placeholder="Password"
               onChange={handleChange}
-              defaultValue={formData.password}
+              // defaultValue={formData.password}
               autoComplete="off"
             />
           </div>
           <button
             disabled={loading}
-            className="p-2 font-semibold uppercase rounded-lg bg-emerald-700 text-slate-100 hover:bg-emerald-600 disabled:bg-gray-700"
+            className="w-full p-2 font-semibold uppercase rounded-lg bg-emerald-700 text-slate-100 hover:bg-emerald-600 disabled:bg-gray-700"
             type="submit"
           >
             {loading ? "Loading..." : "Update account info"}
           </button>
           <button
             disabled={loading}
-            className="p-2 font-semibold uppercase rounded-lg bg-sky-700 text-slate-100 hover:bg-sky-600 disabled:bg-gray-700"
+            className="w-full p-2 font-semibold uppercase rounded-lg bg-sky-700 text-slate-100 hover:bg-sky-600 disabled:bg-gray-700"
             onClick={handleSignout}
           >
             {loading ? "Loading..." : "Log out the account"}
