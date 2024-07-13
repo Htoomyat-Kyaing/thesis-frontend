@@ -95,7 +95,7 @@ const Home = () => {
         className="flex flex-wrap items-center w-full gap-6 p-3 bg-blue-300"
       >
         <div className="flex flex-col w-full max-w-5xl gap-4 mx-auto sm:flex-row">
-          <div className="flex items-center justify-between w-full gap-4 sm:justify-start sm:w-fit">
+          <div className="flex items-center justify-between w-full gap-4 sm:w-fit">
             <label htmlFor="searchTerm">Item Name</label>
             <input
               className="w-full p-2 border-2 border-black rounded-lg indent-2 focus:outline-none max-w-40"
@@ -134,12 +134,14 @@ const Home = () => {
               <option value="sellPrice_desc">Most Expensive</option>
             </select>
           </div>
-          <button
-            className="py-2 font-bold text-black border-2 border-black rounded-lg min-w-40 hover:text-blue-300 hover:bg-black hover:cursor-pointer"
-            type="submit"
-          >
-            Search
-          </button>
+          <div className="items-center justify-center flex-1 w-full">
+            <button
+              className="flex-grow w-full py-2 font-bold text-black border-2 border-black rounded-lg hover:text-blue-300 hover:bg-black hover:cursor-pointer"
+              type="submit"
+            >
+              Search
+            </button>
+          </div>
         </div>
       </form>
       <div className="flex flex-wrap items-center justify-center flex-grow w-full max-w-5xl gap-3 p-3 sm:flex-nowrap hover:cursor-pointer">

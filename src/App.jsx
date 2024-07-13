@@ -22,7 +22,7 @@ export default function App() {
         <Route path="/item/:itemId" element={<ItemPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/list-item" element={<ListItem />} />
-          <Route path="/sell-list" element={<SellList />} />
+          <Route path="/your-items" element={<SellList />} />
           <Route path="/edit-item/:itemId" element={<EditItem />} />
         </Route>
       </Routes>

@@ -22,7 +22,7 @@ const ListItem = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    if (e.target.name === "sellPrice" || e.target.name === "originalPrice") {
+    if (e.target.type === "number") {
       setFormData({
         ...formData,
         [e.target.name]: parseInt(e.target.value),
@@ -66,7 +66,7 @@ const ListItem = () => {
       }
       console.log(data);
       setLoading(false);
-      navigate("/sell-list");
+      navigate("/your-items");
     } catch (error) {
       console.log(error.message);
       setLoading(false);
@@ -234,6 +234,18 @@ const ListItem = () => {
               className="p-2 border-2 rounded-lg"
               placeholder="Category"
               onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-wrap items-center justify-between w-full">
+            <label htmlFor="category">In Stock</label>
+            <input
+              type="number"
+              name="inStock"
+              // required
+              className="p-2 border-2 rounded-lg"
+              placeholder="In Stock"
+              onChange={handleChange}
+              defaultValue={formData?.inStock}
             />
           </div>
           <div className="flex flex-wrap items-center justify-between w-full">
