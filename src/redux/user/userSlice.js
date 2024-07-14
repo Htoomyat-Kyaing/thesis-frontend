@@ -18,6 +18,7 @@ export const userSlice = createSlice({
       state.loading = false;
       state.currentUser = action.payload;
       state.error = null;
+      state.cart = action.payload.cart;
     },
     signInFail: (state, action) => {
       state.error = action.payload;
@@ -25,6 +26,8 @@ export const userSlice = createSlice({
     },
     signOutStart: (state) => {
       state.loading = true;
+      // temporary solution
+      state.cart = [];
     },
     signOutSuccess: (state) => {
       state.loading = false;

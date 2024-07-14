@@ -9,6 +9,7 @@ import ListItem from "./pages/ListItem";
 import SellList from "./pages/SellList";
 import EditItem from "./pages/EditItem";
 import ItemPage from "./pages/ItemPage";
+import Cart from "./pages/Cart";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/list-item" element={<ListItem />} />
           <Route path="/your-items" element={<SellList />} />
           <Route path="/edit-item/:itemId" element={<EditItem />} />
+          <Route path="/cart" element={<Cart />} />
         </Route>
       </Routes>
     </BrowserRouter>

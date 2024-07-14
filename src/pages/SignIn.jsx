@@ -42,6 +42,7 @@ const SignIn = () => {
         dispatch(signInFail(data.message));
         return;
       }
+      // console.log(data.cart);
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {

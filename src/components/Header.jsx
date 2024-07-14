@@ -1,8 +1,10 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { FaCartArrowDown, FaStore } from "react-icons/fa";
+import { MdSell } from "react-icons/md";
 
 const Header = () => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, cart } = useSelector((state) => state.user);
   return (
     <header className="p-3 bg-red-300 select-none">
       <div className="flex items-center justify-between max-w-5xl mx-auto">
@@ -11,11 +13,70 @@ const Header = () => {
         </Link>
 
         <ul className="flex flex-wrap items-center gap-4">
-          <li className="hover:underline">
-            <Link to={"/your-items"}>Your Items</Link>
+          <li className="flex items-center justify-center w-fit">
+            <Link
+              className="transition-all rounded-full sm:hidden hover:scale-150"
+              to={"/your-items"}
+            >
+              <FaStore size={20} />
+            </Link>
+            <Link
+              className="hidden gap-1 transition-all hover:border-b hover:border-black sm:flex sm:items-center hover:-translate-y-0.5"
+              to={"/your-items"}
+            >
+              <FaStore size={14} />
+              <span>Your Items</span>
+            </Link>
           </li>
-          <li className="hover:underline">
-            <Link to={"/list-item"}>List Item</Link>
+          <li className="flex items-center justify-center w-fit">
+            <Link
+              className="transition-all rounded-full sm:hidden hover:scale-150"
+              to={"/list-item"}
+            >
+              <MdSell size={20} />
+            </Link>
+            <Link
+              className="hidden gap-1 transition-all hover:border-b hover:border-black sm:flex sm:items-center hover:-translate-y-0.5"
+              to={"/list-item"}
+            >
+              <MdSell size={14} />
+              <span>List Item</span>
+            </Link>
+          </li>
+          <li className="flex items-center justify-center w-fit">
+            <Link
+              className="relative transition-all rounded-full sm:hidden hover:scale-150"
+              to={"/cart"}
+            >
+              {cart.length !== 0 && (
+                <span className="absolute flex w-4 h-4 -top-1.5 -right-2 ">
+                  <span className="absolute inline-flex w-full h-full bg-purple-400 rounded-full opacity-75 animate-ping"></span>
+                  <span className="relative flex items-center justify-center w-4 h-4 bg-purple-500 rounded-full">
+                    <p className="text-xs font-bold text-white">
+                      {cart.length}
+                    </p>
+                  </span>
+                </span>
+              )}
+              <FaCartArrowDown size={20} />
+            </Link>
+            <Link
+              className="hidden gap-1 transition-all hover:border-b hover:border-black sm:flex sm:items-center hover:-translate-y-0.5 relative"
+              to={"/cart"}
+            >
+              <FaCartArrowDown size={14} />
+              {cart.length !== 0 && (
+                <span className="absolute flex w-4 h-4 -top-1.5 right-0 ">
+                  <span className="absolute inline-flex w-full h-full bg-purple-400 rounded-full opacity-75 animate-ping"></span>
+                  <span className="relative flex items-center justify-center w-4 h-4 bg-purple-500 rounded-full">
+                    <p className="text-xs font-bold text-white">
+                      {cart.length}
+                    </p>
+                  </span>
+                </span>
+              )}
+              <span>Your Cart</span>
+            </Link>
           </li>
 
           {currentUser?.avatar ? (
