@@ -43,22 +43,22 @@ const ItemPage = () => {
 
   return (
     <main className="flex flex-col items-center justify-center gap-4 p-4 sm:flex-row sm:items-center">
-      <div className="flex flex-col w-full max-w-5xl gap-4 mx-auto sm:flex-row">
+      <div className="flex flex-col items-center w-full max-w-5xl gap-2 mx-auto sm:gap-5 sm:flex-row">
         <img
-          className="object-contain h-60 sm:h-96 sm:w-80"
+          className="object-contain w-40 h-48 sm:h-96 sm:w-80"
           src={formData?.imageUrl}
           alt=""
         />
-        <div className="flex flex-col gap-2 text-center">
-          <p className="text-2xl font-bold">{formData?.name}</p>
-          <div className="flex flex-col justify-center w-full gap-5 sm:justify-between sm:flex-row">
-            <p className="flex items-center gap-2 text-xl">
+        <div className="flex flex-col gap-2 text-center sm:gap-5">
+          <p className="text-xl font-bold sm:text-2xl">{formData?.name}</p>
+          <div className="flex flex-col items-center w-full gap-5 sm:justify-between sm:flex-row">
+            <p className="flex items-center gap-2 text-lg sm:text-xl">
               Category :{" "}
               <span className="px-2 py-1 font-bold text-white bg-purple-600 rounded-lg">
                 {formData?.category}
               </span>
             </p>
-            <p className="flex items-center gap-2 text-xl">
+            <p className="flex items-center gap-2 text-lg sm:text-xl">
               Items Left :{" "}
               {formData?.inStock === 0 ? (
                 <span className="px-2 py-1 font-bold text-white bg-red-600 rounded-lg">
@@ -70,10 +70,10 @@ const ItemPage = () => {
                 </div>
               )}
             </p>
-            <p className="flex items-center gap-2 text-xl">
+            <p className="flex items-center gap-2 text-lg sm:text-xl">
               Items In Cart :{" "}
               {found1?.amount === undefined ? (
-                <span className="px-2 py-1 font-bold text-white bg-red-600 rounded-lg">
+                <span className="w-8 h-8 font-bold text-white bg-red-600 rounded-full">
                   0
                 </span>
               ) : (
@@ -84,25 +84,23 @@ const ItemPage = () => {
             </p>
           </div>
           {formData?.description ? (
-            <p>{formData.description}</p>
+            <p className="text-sm sm:text-base">{formData.description}</p>
           ) : (
-            <p>
+            <p className="text-sm sm:text-base">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda
               tempore voluptatibus recusandae hic quis ducimus obcaecati magnam
               quas incidunt vero, quam, commodi illum odio! Voluptatum a ut sunt
               facere ab!
             </p>
           )}
-          <div className="flex justify-center w-full gap-8 text-xl font-semibold">
-            <p className="text-orange-600">
+          <div className="flex justify-between w-full gap-8 text-base font-semibold sm:text-xl">
+            <p>
               Original Price :{" "}
               {formData?.originalPrice
                 ? formData.originalPrice + " Kyats"
                 : "UNKNOWN"}
             </p>
-            <p className="text-lime-600">
-              Sell Price : {formData?.sellPrice} Kyats
-            </p>
+            <p>Sell Price : {formData?.sellPrice} Kyats</p>
           </div>
           {currentUser ? (
             currentUser?._id !== formData?.userRef && (

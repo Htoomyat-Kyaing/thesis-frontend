@@ -5,12 +5,16 @@ import {
   removeFromCart,
 } from "../redux/user/userSlice";
 import { IoMdAddCircle, IoIosRemoveCircle } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const Cart = () => {
   const { currentUser, cart } = useSelector((state) => state.user);
   // const found1 = cart.find((item) => item.name === formData?.name);
   // console.log(currentUser._id);
   // console.log(cart);
+  const navigate = useNavigate();
+  const [success, setSuccess] = useState();
 
   const handleSaveCart = async (e) => {
     e.preventDefault();
@@ -30,17 +34,17 @@ const Cart = () => {
       const data = await res.json();
       if (data.success === false) {
         // dispatch(updateFail(data.message));
-        // setSuccess(null);
+        setSuccess(null);
         return;
       }
       console.log(data);
       // dispatch(updateSuccess(data));
       // setImageUploadProgress(undefined);
-      // setSuccess("User updated successfully");
+      setSuccess("Cart has been saved");
       // fileRef.current.value = "";
     } catch (error) {
       // dispatch(updateFail(error.message));
-      // setSuccess(null);
+      setSuccess(null);
     }
   };
 
@@ -50,47 +54,58 @@ const Cart = () => {
       <div className="flex flex-col items-center justify-center max-w-5xl gap-4 mx-auto">
         <h2 className="text-xl font-bold">Your Cart</h2>
 
+        <span className="text-center text-emerald-600">
+          {success && success}
+        </span>
+
         <div className="flex flex-col justify-center w-full">
           {cart &&
             cart.map((item) => (
               <div
-                className="flex items-center justify-between w-full max-w-5xl gap-5"
+                className="flex items-center justify-between w-full max-w-5xl gap-5 py-2 border-b-2 border-slate-900 first:border-t-2"
                 key={item.id}
               >
-                <img
-                  src={item.imageUrl}
-                  className="object-contain w-8 h-8 rounded-full"
-                />
-                <p>{item.name}</p>
-                <p className="flex items-center gap-2">
-                  <span className="text-xl font-bold transition-all select-none">
+                <div className="flex items-center justify-center flex-1 gap-5 sm:justify-start">
+                  <img
+                    src={item.imageUrl}
+                    className="object-contain w-8 h-8 transition-all border-2 border-white rounded-lg sm:w-12 sm:h-12 hover:border-slate-800 hover:scale-125 hover:cursor-pointer"
+                    onClick={() => {
+                      navigate(`/item/${item.id}`);
+                    }}
+                  />
+                  <p className="hidden sm:inline-block">{item.name}</p>
+                </div>
+                <p className="flex items-center justify-center flex-1 gap-2 text-sm">
+                  <span className="text-base font-bold transition-all select-none sm:text-xl">
                     {item.sellPrice * item.amount}
                   </span>{" "}
                   Kyats
                 </p>
-                <div className="flex items-center justify-center gap-4">
-                  <button
-                    disabled={item.amount === item.inStock}
-                    className="capitalize disabled:text-red-600"
-                    onClick={() => {
-                      dispatch(addMore(item.name));
-                    }}
-                  >
-                    <IoMdAddCircle />
-                  </button>
-                  <span className="text-xl font-bold transition-all select-none">
-                    {item.amount}
-                  </span>
+                <div className="flex-1">
+                  <div className="flex justify-center gap-2 sm:gap-5 group/item">
+                    <button
+                      disabled={item.amount === item.inStock}
+                      className="transition-all disabled:text-gray-600 disabled:opacity-75 text-emerald-600 hover:scale-125"
+                      onClick={() => {
+                        dispatch(addMore(item.name));
+                      }}
+                    >
+                      <IoMdAddCircle />
+                    </button>
+                    <span className="text-base font-bold transition-all duration-200 select-none sm:text-xl group-active/item:scale-150">
+                      {item.amount}
+                    </span>
 
-                  <button
-                    disabled={item.amount === 0}
-                    className="capitalize disabled:text-red-600"
-                    onClick={() => {
-                      dispatch(removeFromCart(item.name));
-                    }}
-                  >
-                    <IoIosRemoveCircle />
-                  </button>
+                    <button
+                      disabled={item.amount === 0}
+                      className="text-red-600 transition-all disabled:text-gray-600 disabled:opacity-75 hover:scale-125"
+                      onClick={() => {
+                        dispatch(removeFromCart(item.name));
+                      }}
+                    >
+                      <IoIosRemoveCircle />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}

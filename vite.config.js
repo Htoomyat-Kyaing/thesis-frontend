@@ -5,14 +5,19 @@ import react from "@vitejs/plugin-react-swc";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    // port: 3000,
     proxy: {
+      // "/api/": {
+      //   target: "https://thesis-backend-m13g.onrender.com/",
+      //   // target: "http://localhost:5173/",
+      //   changeOrigin: true,
+      //   secure: true,
+      //   // require this to work
+      //   rewrite: (path) => path.replace(/^\/api/, ""),
+      // },
       "/api": {
-        // target: "https://thesis-backend-m13g.onrender.com",
-        target: "http://localhost:5173/",
+        target: "https://thesis-backend-m13g.onrender.com",
         changeOrigin: true,
-        secure: true,
-        // require this to work
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
