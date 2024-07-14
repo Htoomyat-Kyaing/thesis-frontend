@@ -52,7 +52,11 @@ const Home = () => {
     urlParams.set("limit", formData.limit);
     urlParams.set("startIndex", formData.startIndex);
     const searchQuery = urlParams.toString();
-    const res = await fetch(`/api/item/get/items?${searchQuery}`);
+    // DIRECT API TEST
+    const res = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/item/get/items?${searchQuery}`
+    );
+    // const res = await fetch(`/api/item/get/items?${searchQuery}`);
     try {
       const data = await res.json();
       setAllItems(data);
