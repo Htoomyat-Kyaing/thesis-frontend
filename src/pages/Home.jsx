@@ -146,7 +146,7 @@ const Home = () => {
       </form>
       <div className="flex flex-wrap items-center justify-center flex-grow w-full max-w-5xl gap-3 p-3 sm:flex-nowrap hover:cursor-pointer">
         {allItems &&
-          allItems.length > 0 &&
+          allItems?.length > 0 &&
           allItems.map((item) => (
             <div
               className="flex flex-col justify-center w-48 gap-4 p-2 overflow-hidden transition-all border-2 border-black rounded-lg group/item hover:scale-105 h-fit"
@@ -177,7 +177,7 @@ const Home = () => {
           Prev
         </button>
         <button
-          disabled={allItems.length % 5 !== 0} // ITEM-FETCH-LIMIT
+          disabled={allItems?.length % 5 !== 0} // ITEM-FETCH-LIMIT
           className="px-2 py-1 font-semibold border-2 border-black rounded-lg disabled:bg-red-600 disabled:text-white hover:bg-green-300 "
           onClick={async () => {
             setStartIndex((a) => a + 5); // ITEM-FETCH-LIMIT

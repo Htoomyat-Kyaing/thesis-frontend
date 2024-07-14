@@ -138,7 +138,7 @@ const Cart = () => {
             disabled={
               formData.inStock === 0 ||
               found1?.amount === undefined ||
-              cart.length === 0
+              cart?.length === 0
             }
             className="capitalize disabled:text-red-600"
             onClick={() => {
@@ -149,7 +149,7 @@ const Cart = () => {
           </button> */}
 
           <button
-            // disabled={cart.length === 0}
+            // disabled={cart?.length === 0}
             className="self-center px-2 py-1 font-bold capitalize border-2 border-green-600 rounded-lg hover:bg-green-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
             onClick={(e) => {
               // dispatch(deleteWholeCart());
@@ -160,7 +160,7 @@ const Cart = () => {
             Save cart
           </button>
           <button
-            disabled={cart.length === 0}
+            disabled={cart?.length === 0}
             className="self-center px-2 py-1 font-bold capitalize border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
             onClick={() => {
               dispatch(deleteWholeCart());

@@ -37,7 +37,7 @@ const SellList = () => {
         <h2 className="text-xl font-bold">Your Items On The Market</h2>
         <div className="flex flex-wrap items-center justify-center flex-grow w-full max-w-5xl gap-3 p-3 select-none">
           {myItems &&
-            myItems.length > 0 &&
+            myItems?.length > 0 &&
             myItems.map((item) => (
               <div
                 className="flex flex-col justify-center w-48 gap-4 p-2 overflow-hidden transition-all border-2 border-black rounded-lg group/item hover:scale-105 h-fit"

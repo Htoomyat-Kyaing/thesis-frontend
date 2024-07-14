@@ -151,7 +151,7 @@ const ItemPage = () => {
                     disabled={
                       formData.inStock === 0 ||
                       found1?.amount === undefined ||
-                      cart.length === 0
+                      cart?.length === 0
                     }
                     className="self-center px-2 py-1 font-bold capitalize border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
                     onClick={() => {

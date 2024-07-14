@@ -48,12 +48,12 @@ const Header = () => {
               className="relative transition-all rounded-full sm:hidden hover:scale-150"
               to={"/cart"}
             >
-              {cart.length !== 0 && (
+              {cart?.length !== 0 && (
                 <span className="absolute flex w-4 h-4 -top-1.5 -right-2 ">
                   <span className="absolute inline-flex w-full h-full bg-purple-400 rounded-full opacity-75 animate-ping"></span>
                   <span className="relative flex items-center justify-center w-4 h-4 bg-purple-500 rounded-full">
                     <p className="text-xs font-bold text-white">
-                      {cart.length}
+                      {cart?.length}
                     </p>
                   </span>
                 </span>
@@ -65,12 +65,12 @@ const Header = () => {
               to={"/cart"}
             >
               <FaCartArrowDown size={14} />
-              {cart.length !== 0 && (
+              {cart?.length !== 0 && (
                 <span className="absolute flex w-4 h-4 -top-1.5 right-0 ">
                   <span className="absolute inline-flex w-full h-full bg-purple-400 rounded-full opacity-75 animate-ping"></span>
                   <span className="relative flex items-center justify-center w-4 h-4 bg-purple-500 rounded-full">
                     <p className="text-xs font-bold text-white">
-                      {cart.length}
+                      {cart?.length}
                     </p>
                   </span>
                 </span>
