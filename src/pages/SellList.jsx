@@ -49,7 +49,10 @@ const SellList = () => {
                   alt=""
                 />
                 <p className="truncate">Name : {item.name}</p>
-                <p>Price : {item.sellPrice} Kyats</p>
+                <p>
+                  Price : $
+                  <span className="font-semibold">{item.sellPrice}</span>
+                </p>
                 <p>Category : {item.category}</p>
                 <div className="flex justify-between w-full">
                   <p

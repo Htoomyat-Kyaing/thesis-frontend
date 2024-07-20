@@ -7,6 +7,7 @@ import {
 import { IoMdAddCircle, IoIosRemoveCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Cart = () => {
   const { currentUser, cart } = useSelector((state) => state.user);
@@ -15,6 +16,33 @@ const Cart = () => {
   // console.log(cart);
   const navigate = useNavigate();
   const [success, setSuccess] = useState();
+  let amountArray = cart?.map((item) => parseInt(item.sellPrice * item.amount));
+  let totalAmount = amountArray.reduce((accumulator, currentValue) => {
+    return accumulator + currentValue;
+  }, 0);
+  const dispatch = useDispatch();
+
+  const handleCheckout = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51PdszvK4eOVHzmzkBxjSJSt2PNeaHD2HHWYevLNhoygmql2Mm2FviL9QiU1bES8McYn74HHnmLe5ZIPQMj0lewYU004siRA6Xa"
+    );
+
+    const res = await fetch("/api/checkout/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cart),
+    });
+
+    const session = await res.json();
+    console.log(session.id);
+    const result = stripe.redirectToCheckout({ sessionId: session.id });
+
+    if (result.error) {
+      console.log(result.error);
+    }
+  };
 
   const handleSaveCart = async (e) => {
     e.preventDefault();
@@ -48,7 +76,6 @@ const Cart = () => {
     }
   };
 
-  const dispatch = useDispatch();
   return (
     <main className="p-3">
       <div className="flex flex-col items-center justify-center max-w-5xl gap-4 mx-auto">
@@ -75,12 +102,14 @@ const Cart = () => {
                   />
                   <p className="hidden sm:inline-block">{item.name}</p>
                 </div>
-                <p className="flex items-center justify-center flex-1 gap-2 text-sm">
-                  <span className="text-base font-bold transition-all select-none sm:text-xl">
-                    {item.sellPrice * item.amount}
-                  </span>{" "}
-                  Kyats
-                </p>
+                <div className="flex items-center justify-center flex-1 gap-2 text-sm">
+                  <p className="text-base transition-all select-none sm:text-xl">
+                    $
+                    <span className="font-bold">
+                      {item.sellPrice * item.amount}
+                    </span>
+                  </p>{" "}
+                </div>
                 <div className="flex-1">
                   <div className="flex justify-center gap-2 sm:gap-5 group/item">
                     <button
@@ -111,63 +140,47 @@ const Cart = () => {
             ))}
         </div>
 
-        <div className="flex justify-between gap-5">
-          {/* <button
-            disabled={
-              formData.inStock === 0 || formData?.inStock === found1?.amount
-            }
-            className="capitalize disabled:text-red-600"
-            onClick={() => {
-              if (found1 === undefined) {
-                dispatch(
-                  addToCart({
-                    id: formData?._id,
-                    imageUrl: formData?.imageUrl,
-                    name: formData?.name,
-                    amount: 1,
-                  })
-                );
-              } else {
-                dispatch(addMore(found1?.name));
-              }
-            }}
-          >
-            add item to cart
-          </button>
-          <button
-            disabled={
-              formData.inStock === 0 ||
-              found1?.amount === undefined ||
-              cart?.length === 0
-            }
-            className="capitalize disabled:text-red-600"
-            onClick={() => {
-              dispatch(removeFromCart(found1.name));
-            }}
-          >
-            remove from cart
-          </button> */}
+        <div className="flex flex-wrap items-center justify-between w-full gap-5 sm:justify-end">
+          <p className="flex-1 font-bold text-center sm:text-xl">Total :</p>
+          <div className="flex items-center justify-center flex-1 w-full gap-2 text-sm sm:w-fit">
+            <p className="text-base transition-all select-none sm:text-xl">
+              $<span className="font-bold">{totalAmount}</span>
+            </p>
+          </div>
 
-          <button
-            // disabled={cart?.length === 0}
-            className="self-center px-2 py-1 font-bold capitalize border-2 border-green-600 rounded-lg hover:bg-green-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
-            onClick={(e) => {
-              // dispatch(deleteWholeCart());
-              // console.log(cart);
-              handleSaveCart(e);
-            }}
-          >
-            Save cart
-          </button>
-          <button
-            disabled={cart?.length === 0}
-            className="self-center px-2 py-1 font-bold capitalize border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
-            onClick={() => {
-              dispatch(deleteWholeCart());
-            }}
-          >
-            Delete Cart
-          </button>
+          <div className="flex items-center justify-center w-full gap-2 sm:gap-5 sm:w-fit">
+            <button
+              // disabled={cart?.length === 0}
+              className="self-center px-2 py-1 font-bold capitalize border-2 border-green-600 rounded-lg hover:bg-green-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
+              onClick={(e) => {
+                // dispatch(deleteWholeCart());
+                // console.log(cart);
+                handleSaveCart(e);
+              }}
+            >
+              Save cart
+            </button>
+
+            <button
+              disabled={cart?.length === 0}
+              className="self-center px-2 py-1 font-bold capitalize border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
+              onClick={() => {
+                dispatch(deleteWholeCart());
+              }}
+            >
+              Delete Cart
+            </button>
+
+            <button
+              disabled={cart?.length === 0}
+              className="self-center px-2 py-1 font-bold capitalize border-2 border-purple-600 rounded-lg hover:bg-purple-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
+              onClick={() => {
+                handleCheckout();
+              }}
+            >
+              Checkout
+            </button>
+          </div>
         </div>
       </div>
     </main>

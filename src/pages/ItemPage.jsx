@@ -12,9 +12,10 @@ const ItemPage = () => {
   const params = useParams();
   const [formData, setFormData] = useState({});
   const { currentUser, cart } = useSelector((state) => state.user);
-  // const [seller, setSeller] = useState();
+  const [seller, setSeller] = useState();
+
   const found1 = cart.find((item) => item.name === formData?.name);
-  console.log(cart);
+  // console.log(cart);
   // console.log(found1);
   // console.log(formData);
 
@@ -30,16 +31,26 @@ const ItemPage = () => {
     }
   };
 
-  // const handleBuy = async (sellerId) => {
-  //   const res = await fetch(`/api/user/${sellerId}`);
-  //   const data = await res.json();
-  //   setSeller(data);
-  // };
+  const fetchSellerInfo = async (sellerId) => {
+    const res = await fetch(`/api/user/${sellerId}`);
+    const data = await res.json();
+    setSeller(data);
+  };
 
   useEffect(() => {
     fetchItem();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // console.log(formData?.userRef);
+  useEffect(() => {
+    // console.log(formData);
+    fetchSellerInfo(formData.userRef);
+  }, [formData]);
+
+  useEffect(() => {
+    // console.log(seller);
+  }, [seller]);
 
   return (
     <main className="flex flex-col items-center justify-center gap-4 p-4 sm:flex-row sm:items-center">
@@ -50,8 +61,31 @@ const ItemPage = () => {
           alt=""
         />
         <div className="flex flex-col gap-2 text-center sm:gap-5">
-          <p className="text-xl font-bold sm:text-2xl">{formData?.name}</p>
-          <div className="flex flex-col items-center w-full gap-5 sm:justify-between sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
+            <p className="text-xl font-bold sm:text-2xl">{formData?.name}</p>
+
+            {seller && (
+              <p className="flex items-center gap-2 font-semibold sm:gap-5 sm:text-xl ">
+                Listed By :
+                <img
+                  onClick={() => {
+                    console.log("Redirect to seller profile page");
+                  }}
+                  src={seller.avatar}
+                  className="object-cover w-10 h-10 border-2 border-white rounded-full hover:cursor-pointer"
+                ></img>
+              </p>
+            )}
+            {/* <p
+              onClick={() => {
+                fetchSellerInfo(formData?.userRef);
+              }}
+              className="font-bold hover:underline hover:cursor-pointer"
+            >
+              Contact To Seller
+            </p> */}
+          </div>
+          <div className="flex flex-col items-center w-full gap-2 sm:gap-5 sm:justify-between sm:flex-row">
             <p className="flex items-center gap-2 text-lg sm:text-xl">
               Category :{" "}
               <span className="px-2 py-1 font-bold text-white bg-purple-600 rounded-lg">
@@ -65,9 +99,9 @@ const ItemPage = () => {
                   Out of stock
                 </span>
               ) : (
-                <div className="w-8 h-8 font-bold text-white rounded-full bg-sky-600">
+                <span className="w-8 h-8 font-bold text-white rounded-full bg-sky-600">
                   {formData.inStock}
-                </div>
+                </span>
               )}
             </p>
             <p className="flex items-center gap-2 text-lg sm:text-xl">
@@ -95,32 +129,19 @@ const ItemPage = () => {
           )}
           <div className="flex justify-between w-full gap-8 text-base font-semibold sm:text-xl">
             <p>
-              Original Price :{" "}
-              {formData?.originalPrice
-                ? formData.originalPrice + " Kyats"
-                : "UNKNOWN"}
+              Original Price : $
+              <span className="font-bold">
+                {formData?.originalPrice ? formData.originalPrice : "N/A"}
+              </span>
             </p>
-            <p>Sell Price : {formData?.sellPrice} Kyats</p>
+            <p>
+              Sell Price :$
+              <span className="font-bold">{formData?.sellPrice}</span>
+            </p>
           </div>
           {currentUser ? (
             currentUser?._id !== formData?.userRef && (
               <>
-                {/* <button
-                  onClick={() => {
-                    handleBuy(formData?.userRef);
-                  }}
-                  className="self-center px-2 py-1 font-bold border-2 border-green-600 rounded-lg hover:bg-green-600 hover:text-white hover:border-black w-fit"
-                >
-                  Contact To Buy
-                </button>
-                {seller ? (
-                  <div>
-                    <p>Seller Name : {seller.username}</p>
-                    <p>Seller Email : {seller.email}</p>
-                  </div>
-                ) : (
-                  ""
-                )} */}
                 <div className="flex justify-between gap-5">
                   <button
                     disabled={

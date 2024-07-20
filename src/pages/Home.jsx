@@ -1,19 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [allItems, setAllItems] = useState([]);
   const [formData, setFormData] = useState({
     searchTerm: "",
     category: "",
     sort: "createdAt",
+    // excludeUserRef: "",
     order: "desc",
     limit: "5", // ITEM-FETCH-LIMIT
     startIndex: "0",
   });
   const urlParams = new URLSearchParams(window.location.search);
   const [startIndex, setStartIndex] = useState(0);
+  const [nextPageExist, setNextPageExist] = useState(false);
 
   const handleChange = (e) => {
     // need to restart the startIndex counter everytime a category is chosen
@@ -22,6 +26,10 @@ const Home = () => {
       const sort = e.target.value.split("_")[0];
       const order = e.target.value.split("_")[1];
       setFormData({ ...formData, sort, order });
+    } else if (e.target.name === "excludeUserRef") {
+      if (e.target.checked) {
+        setFormData({ ...formData, excludeUserRef: currentUser._id });
+      } else setFormData({ ...formData, excludeUserRef: "" });
     } else setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -33,12 +41,14 @@ const Home = () => {
     urlParams.set("order", formData.order);
     urlParams.set("limit", formData.limit);
     urlParams.set("startIndex", formData.startIndex);
+    urlParams.set("excludeUserRef", formData.excludeUserRef);
     const searchQuery = urlParams.toString();
     const res = await fetch(`/api/item/get/items?${searchQuery}`);
     try {
       const data = await res.json();
       setAllItems(data);
       navigate(`/search?${searchQuery}`);
+      checkNextPageExists(formData.startIndex);
     } catch (error) {
       console.log(error);
     }
@@ -53,10 +63,10 @@ const Home = () => {
     urlParams.set("startIndex", formData.startIndex);
     const searchQuery = urlParams.toString();
     // DIRECT API TEST
-    const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/item/get/items?${searchQuery}`
-    );
-    // const res = await fetch(`/api/item/get/items?${searchQuery}`);
+    // const res = await fetch(
+    //   `${import.meta.env.VITE_BASE_URL}/item/get/items?${searchQuery}`
+    // );
+    const res = await fetch(`/api/item/get/items?${searchQuery}`);
     try {
       const data = await res.json();
       setAllItems(data);
@@ -65,10 +75,23 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    fetchItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const checkNextPageExists = async (startIndex) => {
+    const SI = startIndex + 5;
+    const res = await fetch(
+      `api/item/get/items?startIndex=${SI}&excludeUserRef=${formData?.excludeUserRef}`
+    );
+    try {
+      const data = await res.json();
+      console.log(data.length);
+      if (data.length === 0) {
+        setNextPageExist(false);
+        return;
+      }
+      setNextPageExist(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const nextPageFetch = async (SI) => {
     let res = null;
@@ -88,17 +111,24 @@ const Home = () => {
   };
 
   useEffect(() => {
+    fetchItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    checkNextPageExists(formData?.startIndex);
+  }, []);
+
+  useEffect(() => {
     nextPageFetch(startIndex);
     // eslint-disable-next-line react-hooks/exhaustive-deps
+    checkNextPageExists(startIndex);
   }, [startIndex]);
 
   return (
     <div className="flex flex-col items-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-wrap items-center w-full gap-6 p-3 bg-blue-300"
+        className="flex flex-wrap items-center w-full gap-6 p-3 bg-blue-300 sm:flex-col"
       >
-        <div className="flex flex-col w-full max-w-5xl gap-4 mx-auto sm:flex-row">
+        <div className="flex flex-col justify-between w-full max-w-5xl gap-4 mx-auto sm:flex-row">
           <div className="flex items-center justify-between w-full gap-4 sm:w-fit">
             <label htmlFor="searchTerm">Item Name</label>
             <input
@@ -123,8 +153,9 @@ const Home = () => {
               }}
             />
           </div>
+
           <div className="flex items-center justify-between w-full gap-4 sm:justify-start sm:w-fit">
-            <label className="w-1/3" htmlFor="category">
+            <label className="w-1/3" htmlFor="sort_order">
               Sort By
             </label>
             <select
@@ -138,7 +169,20 @@ const Home = () => {
               <option value="sellPrice_desc">Most Expensive</option>
             </select>
           </div>
-          <div className="items-center justify-center flex-1 w-full">
+        </div>
+        <div className="flex items-center justify-between w-full max-w-5xl">
+          <div className="flex gap-2 sm:gap-5">
+            <label htmlFor="category">Exclude My Items</label>
+            <input
+              type="checkbox"
+              name="excludeUserRef"
+              onChange={handleChange}
+              className="w-8 accent-red-300"
+            />
+          </div>
+
+          {/* <div className="items-center justify-center flex-1 w-full"> */}
+          <div className="w-40 sm:w-80">
             <button
               className="flex-grow w-full py-2 font-bold text-black border-2 border-black rounded-lg hover:text-blue-300 hover:bg-black hover:cursor-pointer"
               type="submit"
@@ -165,7 +209,9 @@ const Home = () => {
                 alt=""
               />
               <p className="truncate ">Name : {item.name}</p>
-              <p>Price : {item.sellPrice} Kyats</p>
+              <p>
+                Price : $<span className="font-semibold">{item.sellPrice}</span>{" "}
+              </p>
               <p>Category : {item.category}</p>
             </div>
           ))}
@@ -173,7 +219,7 @@ const Home = () => {
       <div className="flex justify-between w-full max-w-5xl p-3">
         <button
           disabled={startIndex === 0}
-          className="px-2 py-1 font-semibold border-2 border-black rounded-lg disabled:bg-red-600 disabled:text-white hover:bg-green-300 "
+          className="self-center px-2 py-1 font-bold capitalize border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
           onClick={async () => {
             setStartIndex((a) => a - 5); // ITEM-FETCH-LIMIT
           }}
@@ -181,10 +227,11 @@ const Home = () => {
           Prev
         </button>
         <button
-          disabled={allItems?.length % 5 !== 0} // ITEM-FETCH-LIMIT
-          className="px-2 py-1 font-semibold border-2 border-black rounded-lg disabled:bg-red-600 disabled:text-white hover:bg-green-300 "
+          disabled={!nextPageExist} // ITEM-FETCH-LIMIT
+          className="self-center px-2 py-1 font-bold capitalize border-2 border-green-600 rounded-lg hover:bg-green-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
           onClick={async () => {
             setStartIndex((a) => a + 5); // ITEM-FETCH-LIMIT
+            checkNextPageExists();
           }}
         >
           Next
