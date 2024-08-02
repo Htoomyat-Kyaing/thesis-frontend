@@ -11,14 +11,30 @@ import EditItem from "./pages/EditItem";
 import ItemPage from "./pages/ItemPage";
 import Cart from "./pages/Cart";
 import Admin from "./pages/Admin";
+import ManageUsers from "./pages/ManageUsers";
+import ManageItems from "./pages/ManageItems";
+import UserDetailsForAdmin from "./pages/UserDetailsForAdmin";
+import EditUserByAdmin from "./pages/EditUserByAdmin";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/*" element={<Home />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/users" element={<ManageUsers />} />
+          <Route path="/admin/items" element={<ManageItems />} />
+          <Route
+            path="/admin/user-details/:userId"
+            element={<UserDetailsForAdmin />}
+          />
+          <Route
+            path="/admin/edit-user/:userId"
+            element={<EditUserByAdmin />}
+          />
+        </Route>
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/sign-in" element={<SignIn />} />
