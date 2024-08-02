@@ -10,13 +10,15 @@ import SellList from "./pages/SellList";
 import EditItem from "./pages/EditItem";
 import ItemPage from "./pages/ItemPage";
 import Cart from "./pages/Cart";
+import Admin from "./pages/Admin";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/*" element={<Home />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/admin" element={<Admin />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/sign-in" element={<SignIn />} />

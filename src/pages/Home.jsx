@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -82,7 +83,7 @@ const Home = () => {
     );
     try {
       const data = await res.json();
-      console.log(data.length);
+      // console.log(data.length);
       if (data.length === 0) {
         setNextPageExist(false);
         return;
@@ -112,15 +113,17 @@ const Home = () => {
 
   useEffect(() => {
     fetchItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     checkNextPageExists(formData?.startIndex);
   }, []);
 
   useEffect(() => {
     nextPageFetch(startIndex);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     checkNextPageExists(startIndex);
   }, [startIndex]);
+
+  useEffect(() => {
+    if (currentUser?.role === "admin") navigate("/admin");
+  }, []);
 
   return (
     <div className="flex flex-col items-center">
