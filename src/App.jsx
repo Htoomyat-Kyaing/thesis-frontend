@@ -15,6 +15,7 @@ import ManageUsers from "./pages/ManageUsers";
 import ManageItems from "./pages/ManageItems";
 import UserDetailsForAdmin from "./pages/UserDetailsForAdmin";
 import EditUserByAdmin from "./pages/EditUserByAdmin";
+import EditItemForAdmin from "./pages/EditItemForAdmin";
 
 export default function App() {
   return (
@@ -26,6 +27,10 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/users" element={<ManageUsers />} />
           <Route path="/admin/items" element={<ManageItems />} />
+          <Route
+            path="/admin/edit-item/:itemId"
+            element={<EditItemForAdmin />}
+          />
           <Route
             path="/admin/user-details/:userId"
             element={<UserDetailsForAdmin />}

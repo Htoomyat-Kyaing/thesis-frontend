@@ -140,7 +140,8 @@ const ItemPage = () => {
             </p>
           </div>
           {currentUser ? (
-            currentUser?._id !== formData?.userRef && (
+            currentUser?._id !== formData?.userRef &&
+            currentUser?.role !== "admin" && (
               <>
                 <div className="flex justify-between gap-5">
                   <button
