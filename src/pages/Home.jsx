@@ -165,6 +165,7 @@ const Home = () => {
               className="p-2 border-2 border-black rounded-lg focus:outline-none min-w-40"
               onChange={handleChange}
               name="sort_order"
+              id="sort_order"
             >
               <option value="createdAt_desc">Latest</option>
               <option value="createdAt_asc">Oldest</option>
@@ -175,10 +176,11 @@ const Home = () => {
         </div>
         <div className="flex items-center justify-between w-full max-w-5xl">
           <div className="flex gap-2 sm:gap-5">
-            <label htmlFor="category">Exclude My Items</label>
+            <label htmlFor="excludeUserRef">Exclude My Items</label>
             <input
               type="checkbox"
               name="excludeUserRef"
+              id="excludeUserRef"
               onChange={handleChange}
               className="w-8 accent-red-300"
             />
@@ -195,31 +197,34 @@ const Home = () => {
           </div>
         </div>
       </form>
-      <div className="flex flex-wrap items-center justify-center flex-grow w-full max-w-5xl gap-3 p-3 sm:flex-nowrap hover:cursor-pointer">
+      <div className="flex flex-wrap items-center justify-center flex-grow w-full max-w-5xl gap-3 py-3 sm:flex-nowrap hover:cursor-pointer">
         {allItems &&
           allItems?.length > 0 &&
           allItems.map((item) => (
             <div
-              className="flex flex-col justify-center w-48 gap-4 p-2 overflow-hidden transition-all border-2 border-black rounded-lg group/item hover:scale-105 h-fit"
+              className="flex flex-col items-center justify-center w-48 gap-4 p-2 overflow-hidden transition-all border-2 border-black rounded-lg group/item hover:scale-105 h-fit"
               key={item._id}
               onClick={() => {
                 navigate(`/item/${item._id}`);
               }}
             >
               <img
-                className="object-contain w-40 h-32"
+                className="object-contain w-32 h-32"
                 src={item.imageUrl}
                 alt=""
               />
-              <p className="truncate ">Name : {item.name}</p>
-              <p>
-                Price : $<span className="font-semibold">{item.sellPrice}</span>{" "}
-              </p>
-              <p>Category : {item.category}</p>
+              <div className="flex flex-col gap-2 sm:gap-4 max-w-40">
+                <p className="truncate">Name : {item.name}</p>
+                <p>
+                  Price : $
+                  <span className="font-semibold">{item.sellPrice}</span>{" "}
+                </p>
+                <p className="truncate">Category : {item.category}</p>
+              </div>
             </div>
           ))}
       </div>
-      <div className="flex justify-between w-full max-w-5xl p-3">
+      <div className="flex justify-between w-full max-w-5xl py-3">
         <button
           disabled={startIndex === 0}
           className="self-center px-2 py-1 font-bold capitalize border-2 border-red-600 rounded-lg hover:bg-red-600 hover:text-white w-fit disabled:border-gray-600 disabled:hover:bg-white disabled:text-gray-700 disabled:opacity-75"
